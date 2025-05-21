@@ -8,7 +8,7 @@ from app.models.review import Review
 from app.utils import extract
 
 
-class product:
+class Product:
     def __init__(self, product_id, reviews=[], product_name='', stats=[]):
         self.product_id = product_id
         self.reviews = reviews
@@ -16,15 +16,14 @@ class product:
         self.stats = stats
 
     def __str__(self):
+        nl="\n\n"
         return f"""product_id: {self.product_id}
             product_name: {self.product_name}
-            reviews: {'\n\n'.join(str(review) for review in self.reviews)}
-            stats: {json.dumps(self.stats, indent=4, ensure_ascii=False)}
-
-
-            """
+            reviews: {nl.join([str(review) for review in self.reviews])}
+            stats: {json.dumps(self.stats, indent=4, ensure_ascii=False)}"""
     def reviews_to_dict(self):
         return [review.to_dict() for review in self.reviews]
+        
     def info_to_dict(self):
         return  {
             "product_id": self.product_id,
@@ -63,10 +62,10 @@ class product:
     def calculate_stats(self):
         reviews = pd.DataFrame.from_dict(self.reviews_to_dict())
         self.stats['reviews_count'] = reviews.shape[0]
-        self.stats['pros_count'] = reviews.pros.astype(bool).sum()
-        self.stats['cons_count'] = reviews.cons.astype(bool).sum()
+        self.stats['pros_count'] = int(reviews.pros.astype(bool).sum())
+        self.stats['cons_count'] = int(reviews.cons.astype(bool).sum())
         self.stats['pros_cons_count'] = reviews.apply(lambda r: bool(r.pros) and bool(r.cons), axis=1)
-        self.stats['average_stars'] = round(reviews.stars.mean(), 2)
+        self.stats['average_stars'] = int(round(reviews.stars.mean(), 2))
         return self
         
     def export_reviews(self):

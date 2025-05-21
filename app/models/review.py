@@ -1,5 +1,5 @@
 from app.utils import extract
-class review:
+class Review:
 
     review_scheme = {
     "review_id": (None, "data-entry-id"),
