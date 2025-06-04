@@ -15,7 +15,7 @@ class Review:
     "purchase_date": ("span.user-post__published > time:nth-child(2)", 'datetime'),
     }
 
-    def __init__(self, review_id='', author='', recomendation='', stars=0, content='', pros=[], cons=[], likes=0, dislikes=0, publish_date='', purchase_date=''):
+    def __init__(self, review_id='', author='', recomendation='', stars=0.0, content='', pros=[], cons=[], likes=0, dislikes=0, publish_date='', purchase_date=''):
         self.review_id = review_id
         self.author = author
         self.recomendation = recomendation
@@ -34,10 +34,10 @@ class Review:
     def to_dict(self):
         return {feature: {getattr(self, feature)} for feature in self.review_scheme.keys()}
     
-    def extract_features(self):
+    def extract_features(self, review):
         for key, value in self.review_scheme.items():
-            setattr(self,key,extract(review, *value))
-
+            setattr(self, key, extract(review, *value))
+        return self
     def transform(self):
         self.stars = float(self.stars.split("/")[0].replace(",", "."))
         self.likes = int(self.likes)

@@ -1,4 +1,4 @@
-def extract(ancestor, selector, attribute=None, many=False):
+def extract(ancestor, selector=None, attribute=None, many=False):
     if selector:
         if many:
             if attribute:

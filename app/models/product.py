@@ -28,7 +28,7 @@ class Product:
         return  {
             "product_id": self.product_id,
             "product_name": self.product_name,
-            "reviews": self.reviews
+            "stats": self.stats
         }
 
     def extract_name(self):
@@ -43,7 +43,6 @@ class Product:
 
     def extract_reviews(self):
         next_page = f"https://www.ceneo.pl/{self.product_id}#tab=reviews"
-        all_reviews = []
         while next_page:
             response = requests.get(next_page, headers=headers)
             print(next_page)
@@ -58,23 +57,28 @@ class Product:
                     next_page = "https://www.ceneo.pl"+extract(page_dom, "a.pagination__next", "href")
                 except TypeError:
                     next_page = None
+        return self
 
     def calculate_stats(self):
         reviews = pd.DataFrame.from_dict(self.reviews_to_dict())
-        self.stats['reviews_count'] = reviews.shape[0]
+        self.stats['reviews_count'] = int(reviews.shape[0])
         self.stats['pros_count'] = int(reviews.pros.astype(bool).sum())
         self.stats['cons_count'] = int(reviews.cons.astype(bool).sum())
-        self.stats['pros_cons_count'] = reviews.apply(lambda r: bool(r.pros) and bool(r.cons), axis=1)
-        self.stats['average_stars'] = int(round(reviews.stars.mean(), 2))
+        self.stats['pros_cons_count'] = int(reviews.apply(lambda r: bool(r.pros) and bool(r.cons), axis=1).sum())
+        self.stats['average_stars'] = round(reviews.stars.mean(), 2)
         return self
         
     def export_reviews(self):
-        if not os.path.exists("./app/data/products"):
-            os.mkdir("./app/data/products") 
-        with open(f"./app/data/products/{self.product_id}.json", "w", encoding="UTF-8") as jf:
-            json.dump(self.info_to_dict(), jf, indent=4, ensure_ascii=False)
+        if not os.path.exists("./app/data"):
+            os.mkdir("./app/data")
+        if not os.path.exists("app/data/opinions"):
+            os.mkdir("./app/data/opinions")
+        with open(f"./app/data/opinions/{self.product_id}.json", "w", encoding="UTF-8") as jf:
+            json.dump(self.reviews_to_dict(), jf, indent=4, ensure_ascii=False)
 
     def export_info(self):
+        if not os.path.exists("./app/data"):
+            os.mkdir("./app/data")
         if not os.path.exists("./app/data/products"):
             os.mkdir("./app/data/products") 
         with open(f"./app/data/products/{self.product_id}.json", "w", encoding="UTF-8") as jf:
