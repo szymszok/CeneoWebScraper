@@ -1,6 +1,8 @@
 from flask import render_template, redirect, url_for, request
 from app.models.product import Product
 from app import app
+from app.forms import ProductForm
+import os
 
 @app.route('/')
 def index():
@@ -8,22 +10,36 @@ def index():
 
 @app.route('/extract')
 def display_form():
-    return render_template('extract.html')
+    form = ProductForm()
+    return render_template('extract.html', form=form)
 
 @app.route('/extract', methods=['POST'])
 def extract():
-    product_id = request.form.get("product_id")
-    product = Product(product_id)
-    product.extract_reviews().extract_name().calculate_stats()
-    product.export_reviews()
-    product.export_info()
-    return redirect(url_for('product', product_id=product_id))
+    form = ProductForm(request.form)
+    if form.validate():
+        product_id = form.product_id.data
+        product = Product(product_id)
+        if if_not_exists = 
+            form.product_id.errors.append()
+            return render_template('extract.html', form=form)
+        product.extract_reviews().extract_name().calculate_stats()
+        product.export_reviews()
+        product.export_info()
+        return redirect(url_for('product', product_id=product_id))
+    else:
+        return render_template('extract.html', form=form)
 
 @app.route('/products')
 def products():
+    product_files = os.listdir('./app/data/products')
+    for filename in product_files:
+        with open(f'./app/data/products/{filename}', 'r', encoding='UTF-8') as jf:
+            product = 
+            products.
+
     return render_template('products.html')
 
-@app.route('/products/<products_id>')
+@app.route('/product/<product_id>')
 def product(product_id):
     return render_template('product.html', product_id=product_id)
 
@@ -33,4 +49,4 @@ def charts(product_id):
 
 @app.route('/author')
 def  author():
-    return render_template('authour.html')
+    return render_template('author.html')

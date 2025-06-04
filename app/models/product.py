@@ -8,6 +8,7 @@ from app.models.review import Review
 from app.utils import extract
 
 
+
 class Product:
     def __init__(self, product_id, reviews=[], product_name='', stats=[]):
         self.product_id = product_id
@@ -30,6 +31,24 @@ class Product:
             "product_name": self.product_name,
             "stats": self.stats
         }
+    
+    def info_from_dict(self, info):
+        self.product_id = info['product_id']
+        self.product_name = info['product_name']
+        self.stats = info['stats']
+
+    def if_not_exists(self):
+        next_page = f"https://www.ceneo.pl/{self.product_id}#tab=reviews"
+        response = requests.get(next_page, headers=headers)
+        if response.status_code == 200:
+            page_dom = BeautifulSoup(response.text, 'html.parser')
+            opinions_counts = extract(page_dom, 'a.product-review__link > span')
+            if opinions_counts:
+                return False
+            else:
+                return 'Produkt o podanym kodzie nie istnieje'
+        else:
+            return 'Produkt o podanym kodzie nie istnieje'
 
     def extract_name(self):
         next_page = f"https://www.ceneo.pl/{self.product_id}#tab=reviews"
