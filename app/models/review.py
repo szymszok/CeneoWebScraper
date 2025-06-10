@@ -34,10 +34,15 @@ class Review:
     def to_dict(self):
         return {feature: {getattr(self, feature)} for feature in self.review_scheme.keys()}
     
+    def from_dict(self, review_dict):
+        for key in self.review_schema.keys():
+              setattr(self, key, review_dict[key])
+
     def extract_features(self, review):
         for key, value in self.review_scheme.items():
             setattr(self, key, extract(review, *value))
         return self
+        
     def transform(self):
         self.stars = float(self.stars.split("/")[0].replace(",", "."))
         self.likes = int(self.likes)

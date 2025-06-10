@@ -37,6 +37,12 @@ class Product:
         self.product_name = info['product_name']
         self.stats = info['stats']
 
+    def reviews_from_dict(self, reviews_list):
+        for review_dict in reviews_list:
+            review = Review()
+            review.from_dict(review_dict)
+            self.reviews.append(review)
+
     def if_not_exists(self):
         next_page = f"https://www.ceneo.pl/{self.product_id}#tab=reviews"
         response = requests.get(next_page, headers=headers)
@@ -46,7 +52,7 @@ class Product:
             if opinions_counts:
                 return False
             else:
-                return 'Produkt o podanym kodzie nie istnieje'
+                return 'Dla tego produktu nie ma opinii'
         else:
             return 'Produkt o podanym kodzie nie istnieje'
 
@@ -76,6 +82,8 @@ class Product:
                     next_page = "https://www.ceneo.pl"+extract(page_dom, "a.pagination__next", "href")
                 except TypeError:
                     next_page = None
+            else:
+                next_page = None
         return self
 
     def calculate_stats(self):
