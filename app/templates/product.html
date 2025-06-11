@@ -16,9 +16,9 @@
             <th class="text-center">Author</th>
             <th class="text-center">Rekomendacja</th>
             <th class="text-center"><i class="bi bi-star-fill"></i></th>
-        <!--<th class="text-center">Treść</th>
+            <th class="text-center">Treść</th>
             <th class="text-center">Zalety</th>
-            <th class="text-center">Wady</th> -->
+            <th class="text-center">Wady</th>
             <th class="text-center"><i class="bi bi-hand=thumbs-up-fill"></i></th>
             <th class="text-center"><i class="bi bi-hand-thumbs-down-fill"></i></th>
             <th class="text-center">Data wystawienia</th>
@@ -29,17 +29,17 @@
     <tbody>
         {% for opinion in opinions %}
             <tr>
-                <!-- <td>{{opinion.opinion_id}}</td> -->
+                <td>{{opinion.opinion_id}}</td>
                 <td>{{opinion.author}}</td>
                 <td>{{opinion.recomendation if opinion.recomendation is not none else ""}}</td>
-                <td>{{opinions.stars}}</td>
-            <!--<td>{{opinion.content|truncate(50)}}</td>
+                <td>{{opinion.stars}}</td>
+                <td>{{opinion.content|truncate(50)}}</td>
                 <td>{{opinion.pros|join(', ')|truncate(50)}}</td>
-                <td>{{opinion.cons|join(', ')|truncate(50)}}</td> -->
+                <td>{{opinion.cons|join(', ')|truncate(50)}}</td>
                 <td>{{opinion.useful}}</td>
                 <td>{{opinion.unuseful}}</td>
-                <td>{{opinions.post_date|truncate(13, Flase, "")}}</td>
-                <td>{{opinions.post_date|truncate(13, Flase, "") if opinion.purchase_date is not none else "Opinia nie potwierdzona zakupem"}}</td>
+                <td>{{opinion.post_date|truncate(13, Flase, "")}}</td>
+                <td>{{opinion.post_date|truncate(13, Flase, "") if opinion.purchase_date is not none else "Opinia nie potwierdzona zakupem"}}</td>
                 <td><button type="button" data-bs-toggle="modal" data-bs-target="#details{{opinion.opinion_id}}" class="btn btn-ceneo">{{opinion.opinion_id}}</button></td>
             </tr>
             <div class="modal fade" id="details{{opinion.opinion_id}}" tabindex="-1" aria-labelledby="details{{opinion.opinion_id}}" aria-hidden="true">

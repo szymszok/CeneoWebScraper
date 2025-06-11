@@ -1,16 +1,16 @@
 import os
 import json
-import pandas as pd
 import requests
-from config import headers
+import pandas as pd
 from bs4 import BeautifulSoup
-from app.models.review import Review
+from config import headers
 from app.utils import extract
+from app.models.review  import Review
 
 
 
 class Product:
-    def __init__(self, product_id, reviews=[], product_name='', stats=[]):
+    def __init__(self, product_id, reviews=[], product_name='', stats={}):
         self.product_id = product_id
         self.reviews = reviews
         self.product_name = product_name
@@ -87,12 +87,12 @@ class Product:
         return self
 
     def calculate_stats(self):
-        reviews = pd.DataFrame.from_dict(self.reviews_to_dict())
-        self.stats['reviews_count'] = int(reviews.shape[0])
-        self.stats['pros_count'] = int(reviews.pros.astype(bool).sum())
-        self.stats['cons_count'] = int(reviews.cons.astype(bool).sum())
-        self.stats['pros_cons_count'] = int(reviews.apply(lambda r: bool(r.pros) and bool(r.cons), axis=1).sum())
-        self.stats['average_stars'] = round(reviews.stars.mean(), 2)
+        reviews = pd.DataFrame(self.reviews_to_dict())
+        self.stats["reviews_count"] = int(reviews.shape[0])
+        self.stats["pros_count"] = int(reviews.pros.astype(bool).sum())
+        self.stats["cons_count"] = int(reviews.cons.astype(bool).sum())
+        self.stats["pros_cons_count"] = int(reviews.apply(lambda r: bool(r.pros) and bool(r.cons), axis=1).sum())
+        self.stats["average_stars"] = round(reviews.stars.mean(),2)
         return self
         
     def export_reviews(self):
