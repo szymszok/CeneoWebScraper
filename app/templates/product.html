@@ -12,14 +12,14 @@
 <table class="table table-striped table-hover" id="opinions">
     <thead>
         <tr>
-            <!-- <th class="text-center">Id opinii</th> -->
+            <th class="text-center">Id opinii</th>
             <th class="text-center">Author</th>
             <th class="text-center">Rekomendacja</th>
             <th class="text-center"><i class="bi bi-star-fill"></i></th>
             <th class="text-center">Treść</th>
             <th class="text-center">Zalety</th>
             <th class="text-center">Wady</th>
-            <th class="text-center"><i class="bi bi-hand=thumbs-up-fill"></i></th>
+            <th class="text-center"><i class="bi bi-hand-thumbs-up-fill"></i></th>
             <th class="text-center"><i class="bi bi-hand-thumbs-down-fill"></i></th>
             <th class="text-center">Data wystawienia</th>
             <th class="text-center">Data zakupu</th>
@@ -76,9 +76,24 @@
 {% block script %}
 <script>
     let table = new DataTable('#opinions', {
-        language: {
-            url: '//cdn.datatables.net/plug-ins/2.3.1/i18n/pl.json',
-        },
+        ajax: '/app/data/opinions/{{ product_id }}',
+        columns: [
+            { data: 'author' },
+            { data: 'recommendation' },
+            { data: 'stars' },
+            { data: 'content' },
+            { 
+                data: 'pros', 
+                render: data => Array.isArray(data) ? data.join(', ') : '' 
+            },
+            { 
+                data: 'cons', 
+                render: data => Array.isArray(data) ? data.join(', ') : '' 
+            }
+    ],
+    language: {
+        url: '//cdn.datatables.net/plug-ins/2.3.1/i18n/pl.json',
+    },
     });
 </script>
 {% endblock %}
